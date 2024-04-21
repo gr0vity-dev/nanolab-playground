@@ -1,0 +1,10 @@
+nano_nodes/ # created by nanolab
+_resources/blocks
+_resources/ledgers
+_testcases_old
+nl_config.toml # created by nanolab
+snippets # created by nanolab
+_configs
+nanolab_venv # created by setup script
+testcases/*.json # created by nanolab
+testcases/downloads # created by nanolab if an url is specified
