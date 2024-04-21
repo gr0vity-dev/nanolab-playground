@@ -10,7 +10,7 @@ remote_address = "172.17.0.1"
 
 promexporter_enable = true
 prom_gateway = "https://nl-exporter.bnano.info"
-prom_runid = "nanolab_gr0vity"
+prom_runid = "nanolab_default"
 
 [representatives]
 node_prefix = "nl"

@@ -23,14 +23,6 @@
         },
         {
             "type": "snippet",
-            "key": "nanomock_conf_edit",
-            "variables": {
-                "PATH": "prom_runid",
-                "VALUE": "5n4pr_conf_10k_change_{docker_tag}"
-            }
-        },
-        {
-            "type": "snippet",
             "key": "nanomock_conf_edit_create",
             "variables": {
                 "PATH": "representatives.cpu",

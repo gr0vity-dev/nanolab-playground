@@ -25,6 +25,7 @@ project_id = config['project_id']
 machine_type = config['machine_type']
 nl_config_path = config['nl_config_path']
 is_spot = config.get('is_spot', False)
+prom_rundid = config.get('prom_rundid', 'nanolab_default_gcloud')
 
 
 async def async_subprocess_run(command):
@@ -128,13 +129,12 @@ async def get_worker_instances(toml_path) -> list:
         "representatives"], "Missing 'config_rpc_path' in representatives"
     assert "docker_tag" in config[
         "representatives"], "Missing 'docker_tag' in representatives"
-    config.setdefault("prom_runid", "gcloud_test")
-
+    
     node: dict
     for node in config["representatives"]["nodes"]:
         assert "name" in node, "Missing 'name' field in node"
         node.setdefault("zone", random.choice(await get_zones()))
-        node.setdefault("runid", config["prom_runid"])
+        node.setdefault("runid", prom_rundid)
         node.setdefault("docker_tag", config["representatives"]["docker_tag"])
         node.setdefault("config_node_path",
                         config["representatives"]["config_node_path"])
