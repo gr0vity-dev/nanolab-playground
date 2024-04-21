@@ -1,0 +1,9 @@
+confirmation_timeout_seconds = 20
+threshold = 203000
+legit_blocks_path = "testcases/downloads/_blocks/5n4pr_200legit.json"
+rpc_endpoints = [
+  "http://127.0.0.1:45101",
+  "http://127.0.0.1:45102",
+  "http://127.0.0.1:45103",
+  "http://127.0.0.1:45104",
+]

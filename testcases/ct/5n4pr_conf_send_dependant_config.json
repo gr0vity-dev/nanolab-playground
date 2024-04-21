@@ -1,0 +1,108 @@
+{
+    "testcase": "5n4pr_conf_send_dependant_config",
+    "description": "Publish 3* 50 individual send+receive blocks from one account and await their confirmation",
+    "docker_tags": [
+        "nanocurrency/nano:V26.1"
+    ],
+    "global": {
+        "LEDGER_PATH": "./_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
+        "NL_CONFIG_PATH": "./_resources/configs/nanomock/5n4pr_default.toml",
+        "CPU_PER_NODE": 0.3
+    },
+    "commands": [
+        {
+            "type": "snippet",
+            "key": "nanomock_reset_copy_ledger_create",
+            "variables": {
+                "NL_CONFIG": "{NL_CONFIG_PATH}",
+                "REMOTE_IP": "172.17.0.1",
+                "SETUP_NODES": "nl_genesis nl_pr1 nl_pr2 nl_pr3 nl_pr4",
+                "LEDGER": "{LEDGER_PATH}"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_conf_edit",
+            "variables": {
+                "PATH": "promexporter_enable",
+                "VALUE": "false"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_conf_edit_create",
+            "variables": {
+                "PATH": "representatives.cpu",
+                "VALUE": "{CPU_PER_NODE}"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_start_init"
+        },
+        {
+            "description": "Publish 3 * 50 dependant send blocks",
+            "type": "threaded",
+            "commands": [
+                {
+                    "type": "python",
+                    "class": "NodeInteraction",
+                    "group": "g1",
+                    "method": "publish_create",
+                    "delay": 5,
+                    "variables": {
+                        "params": {
+                            "type": "send_wait_conf",
+                            "source_seed": "10CA10000000000000000000000000000000000000000000000000000000000A",
+                            "destination_seed": "10CA10000000000000000000000000000000000000000000000000000000000A",
+                            "send_amount_raw": 1,
+                            "source_start_index": 0,
+                            "block_count": 50,
+                            "is_independent": false,
+                            "timeout_s": 5,
+                            "node_name": "nl_pr1"
+                        }
+                    }
+                },
+                {
+                    "type": "python",
+                    "class": "NodeInteraction",
+                    "method": "publish_create",
+                    "group": "g1",
+                    "variables": {
+                        "params": {
+                            "type": "send_wait_conf",
+                            "source_seed": "10CA100000000000000000000000000000000000000000000000000000000000",
+                            "destination_seed": "10CA100000000000000000000000000000000000000000000000000000000000",
+                            "send_amount_raw": 1,
+                            "source_start_index": 50,
+                            "block_count": 50,
+                            "is_independent": false,
+                            "timeout_s": 5,
+                            "node_name": "nl_pr2"
+                        }
+                    }
+                },
+                {
+                    "type": "python",
+                    "class": "NodeInteraction",
+                    "method": "publish_create",
+                    "group": "g1",
+                    "variables": {
+                        "params": {
+                            "type": "send_wait_conf",
+                            "source_seed": "10CA100000000000000000000000000000000000000000000000000000000088",
+                            "destination_seed": "10CA100000000000000000000000000000000000000000000000000000000088",
+                            "send_amount_raw": 1,
+                            "source_start_index": 100,
+                            "block_count": 50,
+                            "is_independent": false,
+                            "timeout_s": 5,
+                            "node_name": "nl_pr3"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

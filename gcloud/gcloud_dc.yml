@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  nanonode:
+    image: ${DOCKER_TAG}
+    container_name: nanonode
+    command: nano_node daemon --network=test --data_path=/root/NanoTest -l
+    restart: unless-stopped
+    privileged: 'true'
+    volumes:
+    - .:/root
+    environment:
+      NANO_TEST_GENESIS_BLOCK: '{"account": "nano_1fzwxb8tkmrp8o66xz7tcx65rm57bxdmpitw39ecomiwpjh89zxj33juzt6p", "representative": "nano_1fzwxb8tkmrp8o66xz7tcx65rm57bxdmpitw39ecomiwpjh89zxj33juzt6p", "source": "37FCEA4DA94F1635484EFCBA57483C4C654F573B435C09D8AACE1CB45E63FFB1", "signature": "492FBB6A8852FD6086739D151454A5A6A2920D9A6085FDA1F00690D46D9AEC7668A75ECCAA4F52220859E1F45558500A32735060E8B1D0611079B62751457A05", "work": "6d7d8e388d9c853f", "type": "open"}'
+      NANO_TEST_GENESIS_PUB: 37FCEA4DA94F1635484EFCBA57483C4C654F573B435C09D8AACE1CB45E63FFB1
+      NANO_TEST_EPOCH_1: 0x000000000000000f
+      NANO_TEST_EPOCH_2: 0x000000000000000f
+      NANO_TEST_EPOCH_2_RECV: 0x000000000000000f
+      NANO_TEST_MAGIC_NUMBER: RX
+      NANO_TEST_CANARY_PUB: CCAB949948224D6B33ACE0E078F7B2D3F4D79DF945E46915C5300DAEF237934E
+    network_mode: host
+  nanonode_exporter:
+    image: gr0v1ty/nano-prom-exporter:fc1d802b7c0737cdadebd34c2d90de232c7d9069
+    container_name: nanonode_exporter
+    restart: unless-stopped
+    environment:
+    - NANO_PROM_DEBUG=0
+    command: --rpchost 127.0.0.1 --rpc_port 17076 --push_gateway https://nl-exporter.bnano.info
+      --hostname ${INSTANCE_NAME} --runid ${RUN_ID:-gcloud_testsuite} --interval 2
+    network_mode: host

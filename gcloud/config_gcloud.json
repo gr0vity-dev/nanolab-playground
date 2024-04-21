@@ -1,0 +1,7 @@
+{
+    "project_id" : "YOUR_GCLOUD_ID",
+    "-machine_type" : "e2-standard-4",
+    "machine_type" : "e2-standard-2",
+    "nl_config_path" : "nl_config.toml",
+    "is_spot" : true
+}

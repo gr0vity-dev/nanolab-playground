@@ -1,0 +1,7 @@
+requests
+pydot==1.4.2
+tomli==2.0.1
+tomli-w
+toml
+pandas
+py7zr

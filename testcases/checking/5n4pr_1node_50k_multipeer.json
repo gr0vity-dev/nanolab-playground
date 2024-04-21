@@ -1,0 +1,101 @@
+{
+    "testcase": "5n4pr_1node_50k_multipeer",
+    "description": "",
+    "docker_tags": [
+        "nanocurrency/nano:V26.1"
+    ],
+    "global": {
+        "BLOCK_PATH": "./_resources/blocks/5n4pr_bucket_rounds.json",
+        "LEDGER_PATH": "./_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
+        "NL_CONFIG_PATH": "_resources/configs/nanomock/5n4pr_conf_novote_pr1.toml",
+        "TEST_TIMEOUT": "50",
+        "SETUP_NODES": "nl_pr1",
+        "EXPECTED_COUNT": 50000,
+        "BPS_PER_THREAD": 2000,
+        "CPU_PER_NODE": 0.2,
+        "PEER_COUNT": 10
+    },
+    "commands": [
+        {
+            "type": "snippet",
+            "key": "nanomock_reset_copy_ledger_create",
+            "variables": {
+                "NL_CONFIG": "{NL_CONFIG_PATH}",
+                "REMOTE_IP": "172.17.0.1",
+                "SETUP_NODES": "{SETUP_NODES}",
+                "LEDGER": "{LEDGER_PATH}"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_conf_edit_create",
+            "variables": {
+                "PATH": "representatives.cpu",
+                "VALUE": "{CPU_PER_NODE}"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_conf_edit_create",
+            "variables": {
+                "PATH": "privileged",
+                "VALUE": "true"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_start_init"
+        },
+        {
+            "type": "bash",
+            "command": "nanomock stop --nodes nl_genesis"
+        },
+        {
+            "type": "threaded",
+            "commands": [
+                {
+                    "type": "python",
+                    "class": "NodeInteraction",
+                    "method": "start_logger",
+                    "delay": -0.1,
+                    "variables": {
+                        "logger_params": {
+                            "type": "rpc",
+                            "timeout": "{TEST_TIMEOUT}",
+                            "expected_blocks_count": "{EXPECTED_COUNT}",
+                            "included_peers": [
+                                "nl_pr1"
+                            ]
+                        },
+                        "sink_params": [
+                            {
+                                "type": "console"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "python",
+                    "method": "publish_blocks",
+                    "variables": {
+                        "publish_params": {
+                            "blocks_path": "{BLOCK_PATH}",
+                            "bps": "{BPS_PER_THREAD}",
+                            "peers": [
+                                "nl_pr1"
+                            ],
+                            "start_round": 0,
+                            "end_round": 1,
+                            "subset": {
+                                "start_index": 0,
+                                "end_index": "{EXPECTED_COUNT}"
+                            }
+                        }
+                    },
+                    "class": "NodeInteraction",
+                    "replicas": "{PEER_COUNT}"
+                }
+            ]
+        }
+    ]
+}
