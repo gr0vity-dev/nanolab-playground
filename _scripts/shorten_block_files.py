@@ -2,7 +2,7 @@ import json
 
 
 in_file = "11n10pr_bucket_funding_2m"  # .json is added by the script)
-in_path = "/Users/bl/Git/nanolab_playground/_testcases_old/downloads/"
+in_path = "./"
 # Define the reduction parameters
 max_rounds = 5  # Number of rounds to keep
 max_elements = 50000  # Number of elements to keep in each list
