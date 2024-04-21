@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #Script to create and delete a virtualenv to keep dependencies separate from other projects
 # ./nanolab_venv.sh
