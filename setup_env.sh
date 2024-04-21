@@ -6,9 +6,6 @@
 
 action=$1
 
-#!/bin/bash
-
-# Section 1: Setup virtual environment for Python
 setup_python() {
     echo "Setting up the Python virtual environment..."
     rm -rf nanolab_venv
@@ -18,7 +15,6 @@ setup_python() {
     ./nanolab_venv/bin/pip3 install wheel
 }
 
-# Section 2: Install dependencies
 install_dependencies() {
     echo "Installing dependencies..."
     ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/python-ed25519-blake2b
@@ -27,7 +23,6 @@ install_dependencies() {
     ./nanolab_venv/bin/pip3 install -r requirements.txt --quiet
 }
 
-# Section 4: Post-setup messages
 output_result() {
     echo "A new virtual environment was created."
     echo "################################################"
@@ -40,7 +35,6 @@ output_result() {
     echo "################################################"
 }
 
-# Section 7: Untar specific tar.gz files if the corresponding directory does not exist
 untar_folder() {
     echo "Untarring files into _resources/ledgers..."
 
@@ -61,9 +55,28 @@ untar_folder() {
     done
 }
 
+create_uid() {
+   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        machine_id=$(cat /sys/class/net/eth0/address)
+        random_string=$(echo -n $machine_id | sha256sum | cut -c 1-8)
+        sed_cmd="sed -i"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        machine_id=$(ifconfig en0 | awk '/ether/{print $2}')
+        random_string=$(echo -n $machine_id | shasum -a 256 | cut -c 1-8)
+        # Define sed command to use for macOS, correctly formatted
+        sed_cmd="sed -i ''"
+    else
+        echo "Unsupported OS"
+        exit 1
+    fi
 
+    find . -type f \( -name "*.toml" -o -name "config*.json" \) | while IFS= read -r file; do
+        eval "$sed_cmd 's/\(prom_runid.*\"nanolab_\)[^\"]*/\1${random_string}/g' \"$file\""
+    done
 
-# Section 5: Download large files
+    echo "Replacement complete."
+}
+
 download_large_files() {
     echo "Downloading and organizing files..."
     base_url="https://frmpm7m0wpcq.objectstorage.eu-frankfurt-1.oci.customer-oci.com/n/frmpm7m0wpcq/b/nanoct/o/"
@@ -102,17 +115,18 @@ download_large_files() {
     do
         wget -nc "${base_url}${file}" -P _resources/ledgers
     done
-
     echo "Download completed"
+
 }
 
 # Main program execution
 if [ "$action" = "" ]; then
+    create_uid
     download_large_files
     untar_folder
     setup_python
-    install_dependencies    
-    output_result
+    install_dependencies
+    output_result    
 
 elif [ "$action" = "delete" ];
 then
