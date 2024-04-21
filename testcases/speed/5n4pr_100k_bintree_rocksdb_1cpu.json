@@ -13,7 +13,7 @@
     "commands": [
         {
             "type": "snippet",
-            "key": "nanomock_reset_copy_ledger_create_2",
+            "key": "nanomock_reset_copy_ledger_create",
             "variables": {
                 "NL_CONFIG": "{NL_CONFIG_PATH}",
                 "REMOTE_IP": "172.17.0.1",
