@@ -89,6 +89,8 @@ download_large_files() {
                            "5n4pr_100k_bintree_short.json"
                            "5n4pr_bucket_rounds.json"
                            "5n4pr_bucket_rounds_short.json"
+                           "5n4pr_200legit.json"
+                           "11n10pr_200legit.json"
                            "11n10pr_bucket_rounds_2m.json")
 
     # List of ldb and tar.gz files
