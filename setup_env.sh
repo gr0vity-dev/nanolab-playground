@@ -128,7 +128,9 @@ if [ "$action" = "" ]; then
     untar_folder
     setup_python
     install_dependencies
-    output_result    
+    output_result
+elif [ "$action" = "download" ];
+    download_large_files
 
 elif [ "$action" = "delete" ];
 then
