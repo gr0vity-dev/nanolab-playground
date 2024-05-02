@@ -1,0 +1,18 @@
+[log]
+default_level = "trace"
+
+[log.console]
+#colors = true
+enable = true
+#to_cerr = false
+
+[log.file]
+enable = true
+max_size = 25000000000
+#rotation_count = 4
+
+[log.levels]
+#active_transactions = "info"
+#all = "info"
+#blockprocessor = "info"
+bootstrap = "info"

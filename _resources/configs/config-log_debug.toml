@@ -1,0 +1,10 @@
+[log]
+default_level = "debug"
+
+[log.console]
+#colors = true
+enable = true
+#to_cerr = false
+
+[log.file]
+enable = false

@@ -129,7 +129,7 @@ if [ "$action" = "" ]; then
     setup_python
     install_dependencies
     output_result
-elif [ "$action" = "download" ];
+elif [ "$action" = "download" ]; then
     download_large_files
 
 elif [ "$action" = "delete" ];

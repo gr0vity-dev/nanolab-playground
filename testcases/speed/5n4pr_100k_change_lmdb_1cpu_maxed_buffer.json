@@ -1,5 +1,5 @@
 {
-    "testcase": "5n4pr_100k_change_lmdb_1cpu",
+    "testcase": "5n4pr_100k_change_lmdb_1cpu_maxed",
     "description": "",
     "docker_tags": [
         "nanocurrency/nano:V26.1"
@@ -8,10 +8,18 @@
         "BLOCK_PATH": "./_resources/blocks/5n4pr_bucket_rounds.json",
         "LEDGER_PATH": "./_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
         "NL_CONFIG_PATH": "./_resources/configs/nanomock/5n4pr_default.toml",
-        "NODE_CONFIG_PATH": "./_resources/configs/config-node_default.toml",
-        "TEST_TIMEOUT": 300,
-        "BPS_PER_THREAD": 10000,
-        "END_ROUND": 4,
+        "NODE_CONFIG_PATH": "./_resources/configs/config-node_spam_buffer.toml",
+        "SETUP_NODES": "nl_genesis nl_pr1 nl_pr2 nl_pr3 nl_pr4",
+        "PEERS": [
+            "nl_pr1",
+            "nl_pr2",
+            "nl_pr3",
+            "nl_pr4",
+            "nl_genesis"
+        ],
+        "TEST_TIMEOUT": 100,
+        "BPS_PER_THREAD": 2000,
+        "END_ROUND": 2,
         "EXPECTED_BLOCKS": 100000,
         "CPU_PER_NODE": 1
     },
@@ -22,7 +30,7 @@
             "variables": {
                 "NL_CONFIG": "{NL_CONFIG_PATH}",
                 "REMOTE_IP": "172.17.0.1",
-                "SETUP_NODES": "nl_genesis nl_pr1 nl_pr2 nl_pr3 nl_pr4",
+                "SETUP_NODES": "{SETUP_NODES}",
                 "LEDGER": "{LEDGER_PATH}"
             }
         },
@@ -32,6 +40,14 @@
             "variables": {
                 "PATH": "representatives.cpu",
                 "VALUE": "{CPU_PER_NODE}"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_conf_edit",
+            "variables": {
+                "PATH": "representatives.nodes.*.config_node_path",
+                "VALUE": "{NODE_CONFIG_PATH}"
             }
         },
         {
@@ -77,11 +93,12 @@
                         "publish_params": {
                             "blocks_path": "{BLOCK_PATH}",
                             "bps": "{BPS_PER_THREAD}",
+                            "peers": "{PEERS}",
                             "start_round": 0,
                             "end_round": "{END_ROUND}",
                             "subset": {
                                 "start_index": 0,
-                                "end_index": 10000
+                                "end_index": 12500
                             }
                         }
                     },
@@ -94,28 +111,48 @@
                         "publish_params": {
                             "blocks_path": "{BLOCK_PATH}",
                             "bps": "{BPS_PER_THREAD}",
+                            "peers": "{PEERS}",
                             "start_round": 0,
                             "end_round": "{END_ROUND}",
                             "subset": {
-                                "start_index": 10000,
-                                "end_index": 20000
-                            }
-                        }
-                    },
-                    "class": "NodeInteraction"
-                },
-                {
-                    "type": "python",
-                    "method": "publish_blocks",
-                    "variables": {
-                        "publish_params": {
-                            "blocks_path": "{BLOCK_PATH}",
-                            "bps": "{BPS_PER_THREAD}",
-                            "start_round": 0,
-                            "end_round": "{END_ROUND}",
-                            "subset": {
-                                "start_index": 20000,
+                                "start_index": 12500,
                                 "end_index": 25000
+                            }
+                        }
+                    },
+                    "class": "NodeInteraction"
+                },
+                {
+                    "type": "python",
+                    "method": "publish_blocks",
+                    "variables": {
+                        "publish_params": {
+                            "blocks_path": "{BLOCK_PATH}",
+                            "bps": "{BPS_PER_THREAD}",
+                            "peers": "{PEERS}",
+                            "start_round": 0,
+                            "end_round": "{END_ROUND}",
+                            "subset": {
+                                "start_index": 25000,
+                                "end_index": 37500
+                            }
+                        }
+                    },
+                    "class": "NodeInteraction"
+                },
+                {
+                    "type": "python",
+                    "method": "publish_blocks",
+                    "variables": {
+                        "publish_params": {
+                            "blocks_path": "{BLOCK_PATH}",
+                            "bps": "{BPS_PER_THREAD}",
+                            "peers": "{PEERS}",
+                            "start_round": 0,
+                            "end_round": "{END_ROUND}",
+                            "subset": {
+                                "start_index": 37500,
+                                "end_index": 50000
                             }
                         }
                     },
