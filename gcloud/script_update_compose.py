@@ -1,4 +1,4 @@
-#!./gcloud_venv/bin/python
+#!./nanolab_venv/bin/python
 import asyncio
 import subprocess
 import re
@@ -24,7 +24,7 @@ with open('./gcloud/config_gcloud.json') as f:
 project_id = config['project_id']
 machine_type = config['machine_type']
 nl_config_path = config['nl_config_path']
-is_spot = config.get('is_spot', False)
+is_spot = config.get('is_spot', True)
 prom_rundid = config.get('prom_rundid', 'nanolab_default_gcloud')
 
 
@@ -88,7 +88,7 @@ def setup_docker_compose(name, zone, docker_tag, run_id):
 
     ssh_cmd = f"""gcloud compute ssh {name} --zone {zone} --command 'sudo sh -c "\
     echo '{env_b64}' | base64 -d > /root/.env && \
-    echo '{docker_compose_b64}' | base64 -d > /root/docker-compose.yml && docker compose up -d"' """
+    echo '{docker_compose_b64}' | base64 -d > /root/docker-compose.yml && docker compose pull && docker compose up -d"' """
     subprocess.run(ssh_cmd, shell=True, check=True)
 
 

@@ -1,0 +1,62 @@
+[node.websocket]
+    address = "::ffff:0.0.0.0"
+    enable = true
+    port = 17078
+
+[rpc]
+    enable = true
+    enable_sign_hash = true
+
+[node]
+    work_threads = 1
+    enable_voting = true
+    peering_port = 17075
+    preconfigured_peers = []
+    allow_local_peers = true
+    max_unchecked_blocks = 250000
+
+[node.rocksdb]
+    enable = true
+
+[node.optimistic_scheduler]
+    enabled = false
+
+#[node.bootstrap_ascending.account_sets]
+    #blocking_max = 1
+    #priorities_max = 1
+
+[node.bootstrap_ascending]
+        # Asending bootstrap will wait while block processor has more than this many blocks queued.
+        # type:uint64
+        # block_wait_count = 1000
+
+        # Request limit for accounts from database after which requests will be dropped.
+        # Note: changing to unlimited (0) is not recommended as this operation competes for resources on querying the database.
+        # type:uint64
+        database_requests_limit = 1
+
+        # Number of requested blocks for ascending bootstrap request.
+        # type:uint64
+        pull_count = 10
+
+[node.block_processor]
+
+	# Maximum number of blocks to queue from network peers.
+	# type:uint64
+	# max_peer_queue = 128
+
+	# Maximum number of blocks to queue from system components (local RPC, bootstrap).
+	# type:uint64
+	max_system_queue = 250000
+
+	# Priority for bootstrap blocks. Higher priority gets processed more frequently.
+	# type:uint64
+	# priority_bootstrap = 8
+
+	# Priority for live network blocks. Higher priority gets processed more frequently.
+	# type:uint64
+	# priority_live = 1
+
+	# Priority for local RPC blocks. Higher priority gets processed more frequently.
+	# type:uint64
+	# priority_local = 16

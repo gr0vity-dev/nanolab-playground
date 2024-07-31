@@ -169,61 +169,47 @@ def plot_data(df_filtered, df):
     # One unit above the highest node position
     y_axis_max = max(node_positions.values()) + 1
 
-    # Update the figure layout with a customized y-axis range
-    fig.update_layout(
-        title="Node Events Over Time",
-        xaxis_title="Time",
-        yaxis_title="Node",
-        yaxis=dict(
-            # Specify which values to show ticks for
-            tickvals=list(node_positions.values()),
-            ticktext=list(node_positions.keys()),  # Label text for each tick
-            range=[y_axis_min, y_axis_max]  # Set the y-axis to a tighter range
-        ),
-        xaxis=dict(
-            # Enable the range slider for the x-axis
-            rangeslider=dict(visible=True)
-        ),
-        # Optionally, make the plot more compact vertically
-        # You can adjust this value to change the overall height of the plot
-        height=len(nodes) * 80
-    )
+    # Define the blacklist patterns
+    blacklist_patterns = ["channel", "message"]
 
-    interested_events = [
-        "active_transactions::active_started",
-        "active_transactions::active_stopped",
-        "node::process_confirmed",
-        "vote_processor::vote_processed",
-        "election::vote_processed",
-        "blockprocessor::block_processed",
-        "network_processed::publish",
-        "network_processed::confirm_ack",
-    ]
+    # Function to check if the event is in the blacklist
+    def is_blacklisted(event):
+        return any(event.startswith(pattern) for pattern in blacklist_patterns)
 
-    # Create a color map for the interested events
+    # Create a dynamic color map for events
     colors = px.colors.qualitative.Plotly  # Using Plotly's qualitative colors
-    event_color_map = {event: colors[i % len(colors)]
-                       for i, event in enumerate(interested_events)}
+    event_color_map = {}
 
-    # Iterate over the original dataset for the additional events
-    squares_data = {event: {'x': [], 'y': [], 'color': event_color_map[event], 'text': []}
-                    for event in interested_events}
+    # Initialize a dictionary to store data for each event
+    squares_data = {}
+
     for _, row in df.iterrows():
-        if row['log_process'] in interested_events and row['log_node'] in node_positions:
-            squares_data[row['log_process']]['x'].append(row['log_timestamp'])
-            squares_data[row['log_process']]['y'].append(
-                node_positions[row['log_node']])
+        log_process = row['log_process']
+
+        # Skip blacklisted events
+        if is_blacklisted(log_process):
+            continue
+
+        if log_process not in event_color_map:
+            event_color_map[log_process] = colors[len(event_color_map) % len(colors)]
+
+        if log_process not in squares_data:
+            squares_data[log_process] = {'x': [], 'y': [], 'color': event_color_map[log_process], 'text': []}
+
+        if row['log_node'] in node_positions:
+            squares_data[log_process]['x'].append(row['log_timestamp'])
+            squares_data[log_process]['y'].append(node_positions[row['log_node']])
 
             voter = str(row['voter'])
             log_node = str(row['log_node'])
-            text = str(
-                row['voter']) if voter != 'None' and voter != log_node else ''
-            squares_data[row['log_process']]['text'].append(text)
+            text = str(row['voter']) if voter != 'None' and voter != log_node else ''
+            squares_data[log_process]['text'].append(text)
 
-    # Ensure each event type is plotted as a separate scatter trace
-    for event, data in squares_data.items():
-        # Simplify the event name for the legend
-        # simplified_event_name = event.split("::")[-1]
+    # Sort the squares_data by event name
+    sorted_squares_data = dict(sorted(squares_data.items()))
+
+
+    for event, data in sorted_squares_data.items():
         if data['x'] and data['y']:  # Check if there are any events to plot
             fig.add_trace(go.Scatter(
                 x=data['x'],
@@ -235,16 +221,93 @@ def plot_data(df_filtered, df):
                 name=event,
             ))
 
+
+    # Update the figure layout with customized settings
+    fig.update_layout(
+        xaxis_title="Time",
+        yaxis_title="Node",
+        yaxis=dict(
+            tickvals=list(node_positions.values()),
+            ticktext=list(node_positions.keys()),
+            range=[y_axis_min, y_axis_max]  # Set the y-axis to a tighter range
+        ),
+        xaxis=dict(
+            rangeslider=dict(visible=True)  # Enable the range slider for the x-axis
+        ),
+        height=len(node_positions) * 120,  # Adjust the overall height of the plot
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",  # Anchor the legend to the top of the bottom margin
+            xanchor="center",
+            x=0.5,
+            y=20,
+            font=dict(size=10),  # Adjust the font size if needed
+        ),
+        margin=dict(l=20, r=20, t=120, b=80)
+    )
+
+    # Customize mode bar
+    fig.update_layout(
+        margin=dict(t=60)  # Increase top margin to make space for the mode bar
+    )
+
+    # interested_events = [
+    #     "active_elections::active_started",
+    #     "active_elections::active_stopped",
+    #     "active_elections::active_cemented",
+    #     "node::process_confirmed",
+    #     "vote_processor::vote_processed",
+    #     "election::vote_processed",
+    #     "blockprocessor::block_processed",
+    #     "network_processed::publish",
+    #     "network_processed::confirm_ack"
+    # ]
+
+    # # Create a color map for the interested events
+    # colors = px.colors.qualitative.Plotly  # Using Plotly's qualitative colors
+    # event_color_map = {event: colors[i % len(colors)]
+    #                    for i, event in enumerate(interested_events)}
+
+    # # Iterate over the original dataset for the additional events
+    # squares_data = {event: {'x': [], 'y': [], 'color': event_color_map[event], 'text': []}
+    #                 for event in interested_events}
+    # for _, row in df.iterrows():
+    #     if row['log_process'] in interested_events and row['log_node'] in node_positions:
+    #         squares_data[row['log_process']]['x'].append(row['log_timestamp'])
+    #         squares_data[row['log_process']]['y'].append(
+    #             node_positions[row['log_node']])
+
+    #         voter = str(row['voter'])
+    #         log_node = str(row['log_node'])
+    #         text = str(
+    #             row['voter']) if voter != 'None' and voter != log_node else ''
+    #         squares_data[row['log_process']]['text'].append(text)
+
+    # # Ensure each event type is plotted as a separate scatter trace
+    # for event, data in squares_data.items():
+    #     # Simplify the event name for the legend
+    #     # simplified_event_name = event.split("::")[-1]
+    #     if data['x'] and data['y']:  # Check if there are any events to plot
+    #         fig.add_trace(go.Scatter(
+    #             x=data['x'],
+    #             y=data['y'],
+    #             mode='markers+text',
+    #             marker=dict(symbol="square", color=data['color'], size=8),
+    #             text=data['text'],
+    #             textposition="bottom center",  # Apply the label here
+    #             name=event,
+    #         ))
+
     return fig
 
 
 def get_sql_query(query_hash):
     return f"""
 
-SELECT 
-  log_timestamp, 
-  log_node, 
-  CASE 
+SELECT
+  log_timestamp,
+  log_node,
+  CASE
     WHEN c.node_id = 'node_3x6d94xew6ece9qu5bdsb4t1zucjmrz3ys7otbkcwsuiwg6t76nhtqksm15j' THEN 'nl_pr1'
     WHEN c.node_id = 'node_3xd3zcngjxjpnu8e37anphkc4t9r6xq9huhckznmi8mcnkaf1tpqewwnat5p' THEN 'nl_pr2'
     WHEN c.node_id = 'node_1o7hebgcybr7o9qb6gfypepdy8xgesx7pyygnnzs3k68s4ywsd5h4wxfmhax' THEN 'nl_pr3'
@@ -252,10 +315,17 @@ SELECT
     WHEN c.node_id = 'node_1wp7kh4cmz5adwwh8b6rujrh48kp8gaijjf1hadgsrpa3assj6uio8p66oj1' THEN 'nl_genesis'
     ELSE c.node_id -- Fallback to the original node_id if none of the conditions match
   END AS channel,
-  log_process, 
+  log_process || CASE
+                    WHEN result != 'nan' THEN "_" || result
+                    ELSE ""
+                 END AS log_process,
   v.final as final_vote,
   dropped,
-  CASE 
+  CASE
+    WHEN t.account = '398562D3A2945BE17E6676B3E43603E160142A0A555E85071E5A10D04010D8EC' THEN 'nl_pr1'
+    WHEN t.account = 'E7E14C093B31C38C2D806EC17D75D5B08EEEE668D75818F1F4ECF8DD0CC0F3B1' THEN 'nl_pr2'
+    WHEN t.account = 'FCE16FA5F87645DD73C799B3E959F635752ACA6EF8D9F4918B34B3D5E00E0B56' THEN 'nl_pr3'
+    WHEN t.account = '04BD6D942F527F887196868C8927FF84340B4A9AC491BE69DB3AFC31AAF36F57' THEN 'nl_pr4'
     WHEN v.account = '398562D3A2945BE17E6676B3E43603E160142A0A555E85071E5A10D04010D8EC' THEN 'nl_pr1'
     WHEN v.account = 'E7E14C093B31C38C2D806EC17D75D5B08EEEE668D75818F1F4ECF8DD0CC0F3B1' THEN 'nl_pr2'
     WHEN v.account = 'FCE16FA5F87645DD73C799B3E959F635752ACA6EF8D9F4918B34B3D5E00E0B56' THEN 'nl_pr3'
@@ -263,49 +333,52 @@ SELECT
     ELSE v.account -- Fallback to the original node_id if none of the conditions match
   END AS voter
 FROM (
-select * from log 
-where sql_id in ( select main_sql_id from mappings 
-                  where link_sql_id = (select sql_id from blocks where hash = '{query_hash}') 
+select * from log
+where sql_id in ( select main_sql_id from mappings
+                  where link_sql_id = (select sql_id from blocks where hash = '{query_hash}')
                   and link_type = 'blocks')
 UNION ALL
-select * from log 
-where sql_id in ( select main_sql_id from mappings 
-                  where link_sql_id = (select sql_id from block where hash = '{query_hash}') 
+select * from log
+where sql_id in ( select main_sql_id from mappings
+                  where link_sql_id = (select sql_id from block where hash = '{query_hash}')
                   and link_type = 'block')
 UNION ALL
-select * from log 
-where sql_id in ( select main_sql_id from mappings 
-                  where link_sql_id = (select sql_id from roots where root = '{query_hash}') 
+select * from log
+where sql_id in ( select main_sql_id from mappings
+                  where link_sql_id = (select sql_id from roots where root = '{query_hash}')
                   and link_type = 'roots')
 UNION ALL
-select * from log 
-where sql_id in ( select main_sql_id from mappings 
-                  where link_sql_id = (select sql_id from hashes where hashes = '{query_hash}') 
+select * from log
+where sql_id in ( select main_sql_id from mappings
+                  where link_sql_id = (select sql_id from hashes where hashes = '{query_hash}')
                   and link_type = 'hashes')
 UNION ALL
 select * from log where hash = '{query_hash}'
-) as t 
+) as t
 left join mappings mx on mx.main_sql_id = t.sql_id and mx.link_type = 'channel'
 left join channel c on c.sql_id = mx.link_sql_id
 left join mappings mx2 on mx2.main_sql_id = t.sql_id and mx2.link_type = 'vote'
 left join vote v on v.sql_id = mx2.link_sql_id
 order by log_timestamp asc
-
 """
 
 
-def main():
-    query_hash = "3BA0A389A932B306452592FC9ECD31E9767A970038F1E9226661B7C6DA3E60CB"
-    db_file = f'/mnt/windows/Data/superset/dbfiles/5n4pr.db'
 
+
+
+def main(query_hash, db_file):
     file_out = db_file.split("/")[-1].split(".")[0]
     sql_query = get_sql_query(query_hash)
     df = load_data_from_sqlite(db_file, sql_query)
     df_filtered = preprocess_data(df)
     fig = plot_data(df_filtered, df)
-    fig.write_html(f'plotly_{file_out}.html')
-    print(f"Plot saved as 'plotly_{file_out}.html' ")
+    fig.write_html(f'plotly_{file_out}_{query_hash}.html')
+    print(f"Plot saved as 'plotly_{file_out}_{query_hash}.html' ")
 
 
 if __name__ == "__main__":
-    main()
+    query_hash = input("Enter the query hash: ")
+    # example hash = "F183D770609E9611E076BAA0532CD1EC437CDDD0DF2D358A82BA1A6B4A8B158A"
+    db_file = input("Enter the database file path: ")
+    # example db_file = '/full/path/to/capture.db'
+    main(query_hash, db_file)

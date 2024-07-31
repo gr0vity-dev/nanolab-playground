@@ -15,3 +15,5 @@ preconfigured_peers = []
 allow_local_peers = true
 active_elections_size = 251
 
+[node.active_elections]
+	size = 251

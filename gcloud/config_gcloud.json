@@ -1,7 +1,7 @@
 {
-    "project_id" : "YOUR_GCLOUD_ID",
-    "machine_type" : "e2-standard-2",
+    "project_id" : "learned-trilogy-380821",
+    "machine_type" : "e2-small",
     "nl_config_path" : "nl_config.toml",    
-    "prom_runid" : "nanolab_default_gcloud",
+    "prom_runid" : "nanolab_e3b0c442",
     "is_spot" : true
 }

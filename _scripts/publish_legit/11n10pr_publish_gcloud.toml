@@ -1,0 +1,7 @@
+confirmation_timeout_seconds = 20
+threshold = 803000
+legit_blocks_path = "_resources/blocks/11n10pr_200legit.json"
+use_dynamic_endpoints = true
+endpoint_skip = 2
+endpoint_take = 10
+dynamic_endpoint_config = "nl_config.toml"

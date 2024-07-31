@@ -1,4 +1,4 @@
-confirmation_timeout_seconds = 20
+confirmation_timeout_seconds = 6
 threshold = 203000
 legit_blocks_path = "_resources/blocks/5n4pr_200legit.json"
 rpc_endpoints = [

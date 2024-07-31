@@ -5,9 +5,10 @@
         "nanocurrency/nano:V26.1"
     ],
     "global": {
-        "BLOCK_PATH": "./_resources/blocks/5n4pr_bucket_rounds_short.json",
-        "LEDGER_PATH": "./_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
-        "NL_CONFIG_PATH": "./_resources/configs/nanomock/5n4pr_default.toml",
+        "BLOCK_PATH": "_resources/blocks/5n4pr_bucket_rounds_short.json",
+        "LEDGER_PATH": "_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
+        "NL_CONFIG_PATH": "_resources/configs/nanomock/5n4pr_default.toml",
+        "NODE_CONFIG_PATH": "https://raw.githubusercontent.com/gr0vity-dev/nanolab-configs/main/node-configs/config-node_5n4pr_spam_buffer.toml",
         "CPU_PER_NODE": 0.3
     },
     "commands": [
@@ -19,6 +20,14 @@
                 "REMOTE_IP": "172.17.0.1",
                 "SETUP_NODES": "nl_genesis nl_pr1 nl_pr2 nl_pr3 nl_pr4",
                 "LEDGER": "{LEDGER_PATH}"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_conf_edit",
+            "variables": {
+                "PATH": "representatives.nodes.*.config_node_path",
+                "VALUE": "{NODE_CONFIG_PATH}"
             }
         },
         {
@@ -68,7 +77,7 @@
                             "end_round": 1,
                             "subset": {
                                 "start_index": 0,
-                                "end_index": 2000
+                                "end_index": 2500
                             }
                         }
                     },
@@ -84,8 +93,8 @@
                             "start_round": 0,
                             "end_round": 1,
                             "subset": {
-                                "start_index": 2000,
-                                "end_index": 4000
+                                "start_index": 2500,
+                                "end_index": 5000
                             }
                         }
                     },
@@ -101,8 +110,8 @@
                             "start_round": 0,
                             "end_round": 1,
                             "subset": {
-                                "start_index": 4000,
-                                "end_index": 6000
+                                "start_index": 5000,
+                                "end_index": 7500
                             }
                         }
                     },
@@ -118,42 +127,7 @@
                             "start_round": 0,
                             "end_round": 1,
                             "subset": {
-                                "start_index": 6000,
-                                "end_index": 8000
-                            }
-                        }
-                    },
-                    "class": "NodeInteraction"
-                },
-                {
-                    "type": "python",
-                    "method": "publish_blocks",
-                    "variables": {
-                        "publish_params": {
-                            "blocks_path": "{BLOCK_PATH}",
-                            "bps": 100,
-                            "start_round": 0,
-                            "end_round": 1,
-                            "subset": {
-                                "start_index": 8000,
-                                "end_index": 10000
-                            }
-                        }
-                    },
-                    "class": "NodeInteraction"
-                },
-                {
-                    "type": "python",
-                    "method": "publish_blocks",
-                    "delay": 20,
-                    "variables": {
-                        "publish_params": {
-                            "blocks_path": "{BLOCK_PATH}",
-                            "bps": 1000,
-                            "start_round": 0,
-                            "end_round": 1,
-                            "subset": {
-                                "start_index": 0,
+                                "start_index": 7500,
                                 "end_index": 10000
                             }
                         }

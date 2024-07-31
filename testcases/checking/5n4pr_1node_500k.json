@@ -8,11 +8,12 @@
         "BLOCK_PATH": "_resources/blocks/5n4pr_bucket_rounds.json",
         "LEDGER_PATH": "_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
         "NL_CONFIG_PATH": "_resources/configs/nanomock/5n4pr_conf_novote_pr1.toml",
-        "TEST_TIMEOUT": "500",
+        "NODE_CONFIG_PATH": "_resources/configs/config-node_spam_buffer.toml",
+        "TEST_TIMEOUT": "180",
         "SETUP_NODES": "nl_pr1",
         "EXPECTED_COUNT": 500000,
         "BPS_PER_THREAD": 15000,
-        "CPU_PER_NODE": 4
+        "CPU_PER_NODE": 1
     },
     "commands": [
         {
@@ -31,6 +32,14 @@
             "variables": {
                 "PATH": "representatives.cpu",
                 "VALUE": "{CPU_PER_NODE}"
+            }
+        },
+        {
+            "type": "snippet",
+            "key": "nanomock_conf_edit",
+            "variables": {
+                "PATH": "representatives.nodes.*.config_node_path",
+                "VALUE": "{NODE_CONFIG_PATH}"
             }
         },
         {

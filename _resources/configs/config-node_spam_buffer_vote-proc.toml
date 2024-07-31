@@ -1,0 +1,43 @@
+[node.websocket]
+    address = "::ffff:0.0.0.0"
+    enable = true
+    port = 17078
+
+[rpc]
+    enable = true
+    enable_sign_hash = true
+
+[node]
+    work_threads = 1
+    enable_voting = true
+    peering_port = 17075
+    preconfigured_peers = []
+    allow_local_peers = true
+    #bandwidth_limit = 0
+    #active_elections_size = 5000
+
+[node.block_processor]
+    max_peer_queue = 256000
+    max_system_queue = 512000
+
+[node.message_processor]
+	max_queue = 512000
+
+#[node.active_elections]
+#	size = 5000
+
+[node.vote_processor]
+	max_pr_queue = 256
+    threads = 1
+    batch_size = 1024
+
+#[node.priority_bucket]
+#    max_blocks = 8192
+#    reserved_elections = 2500
+#    max_elections = 5000
+
+[node.vote_cache]
+    max_size = 128000
+
+[node.hinted_scheduler]
+    enable = true

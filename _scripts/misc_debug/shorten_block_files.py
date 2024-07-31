@@ -1,11 +1,11 @@
 import json
 
 
-in_file = "11n10pr_bucket_funding_2m"  # .json is added by the script)
-in_path = "./"
+in_file = "beta_bintree_200k"  # .json is added by the script)
+in_path = "_resources/blocks/beta/"
 # Define the reduction parameters
-max_rounds = 5  # Number of rounds to keep
-max_elements = 50000  # Number of elements to keep in each list
+max_rounds = 1  # Number of rounds to keep
+max_elements = 2000  # Number of elements to keep in each list
 
 
 def analyze_json_data(json_data):
@@ -61,5 +61,5 @@ processed_analysis = analyze_json_data(processed_json_data)
 print("Processed Analysis:", json.dumps(processed_analysis, indent=2))
 
 
-with open(f"{in_file}_short.json", "w") as outfile:
+with open(f"{in_file}_r{max_rounds}_{max_elements}.json", "w") as outfile:
     json.dump(processed_json_data, outfile)

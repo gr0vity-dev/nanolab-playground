@@ -1,4 +1,4 @@
-#!./gcloud_venv/bin/python
+#!./nanolab_venv/bin/python
 import asyncio
 import subprocess
 import re
@@ -97,11 +97,18 @@ def add_config_rpc(name, zone, config_rpc_path):
     mkdir -p /root/NanoTest && echo '{config_b64}' | base64 -d > /root/NanoTest/config-rpc.toml"' """
     subprocess.run(ssh_cmd, shell=True, check=True)
 
+def setup_docker_compose(worker):
+    name = worker["name"]
+    zone = worker["zone"]
+    docker_tag = worker["docker_tag"]
+    run_id = worker["runid"]
+    prom_enable = worker.get("prom_enable", True)
 
-def setup_docker_compose(name, zone, docker_tag, run_id):
+    # Choose the appropriate docker-compose file based on prom_enable
+    docker_compose_file = 'gcloud/gcloud_dc.yml' if prom_enable else 'gcloud/gcloud_dc_nodeonly.yml'
 
-    # Encode the contents of the docker-compose.yml file
-    with open('gcloud/gcloud_dc.yml', 'rb') as f:
+    # Encode the contents of the selected docker-compose.yml file
+    with open(docker_compose_file, 'rb') as f:
         docker_compose_contents = f.read()
     docker_compose_b64 = base64.b64encode(docker_compose_contents).decode()
 
@@ -115,12 +122,18 @@ def setup_docker_compose(name, zone, docker_tag, run_id):
     subprocess.run(ssh_cmd, shell=True, check=True)
 
 
-def execute_worker_tasks(worker_instance, worker_zone, config_node_path,
-                         config_rpc_path, docker_tag, run_id):
+
+def execute_worker_tasks(worker):
+    
+    worker_instance = worker["name"]
+    worker_zone = worker["zone"]
+    config_node_path = worker["config_node_path"]
+    config_rpc_path = worker["config_rpc_path"]
+                             
     wait_instance_up(worker_instance, worker_zone)
     add_config_node(worker_instance, worker_zone, config_node_path)
     add_config_rpc(worker_instance, worker_zone, config_rpc_path)
-    setup_docker_compose(worker_instance, worker_zone, docker_tag, run_id)
+    setup_docker_compose(worker)
 
 
 def set_worker_ledger(worker_instance, worker_zone, ledger_name):
@@ -175,6 +188,7 @@ async def get_worker_instances(toml_path) -> list:
     for node in config["representatives"]["nodes"]:
         assert "name" in node, "Missing 'name' field in node"
         node.setdefault("zone", random.choice(await get_zones()))
+        node.setdefault("machine_type", machine_type)
         node.setdefault("runid", prom_rundid)
         node.setdefault("docker_tag", config["representatives"]["docker_tag"])
         node.setdefault("config_node_path",
@@ -188,7 +202,11 @@ async def get_worker_instances(toml_path) -> list:
     return worker_instances
 
 
-async def create_instance(name, zone):
+async def create_instance(worker):
+    
+    worker_name = worker["name"]
+    worker_zone = worker["zone"]
+    worker_machine = worker["machine_type"]
 
     # Create the startup script that will decode the files and execute the docker-compose.yml file
     startup_script = """#!/bin/bash
@@ -196,27 +214,29 @@ async def create_instance(name, zone):
         apt-get install -y curl gdb
         curl -fsSL https://get.docker.com -o get-docker.sh
         sh get-docker.sh
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
     """
 
     # Update the gcloud command to pass the metadata with the encoded files and the startup script
-    cmd = f'gcloud compute instances create {name} ' \
+    cmd = f'gcloud compute instances create {worker_name} ' \
           f'--project={project_id} ' \
-          f'--zone={zone} ' \
-          f'--machine-type={machine_type} ' \
+          f'--zone={worker_zone} ' \
+          f'--machine-type={worker_machine} ' \
           f'--scopes=compute-rw ' \
           f'--image-family=ubuntu-2204-lts ' \
           f'--image-project=ubuntu-os-cloud '
 
     # Add metadata
     if is_spot:
-        cmd += f'--metadata=worker_role={name},startup-script="{startup_script}",shutdown-script="sudo poweroff" ' \
+        cmd += f'--metadata=worker_role={worker_name},startup-script="{startup_script}",shutdown-script="sudo poweroff" ' \
                '--provisioning-model=SPOT --no-restart-on-failure ' \
                '--maintenance-policy TERMINATE '
         # cmd += f'--metadata=worker_role={name},startup-script="{startup_script}",shutdown-script="sudo poweroff" ' \
         #        '--preemptible --no-restart-on-failure ' \
         #        '--maintenance-policy TERMINATE '
     else:
-        cmd += f'--metadata=worker_role={name},startup-script="{startup_script}"'
+        cmd += f'--metadata=worker_role={worker_name},startup-script="{startup_script}"'
 
     process = await asyncio.create_subprocess_shell(cmd,
                                                     stdout=subprocess.PIPE,
@@ -224,9 +244,9 @@ async def create_instance(name, zone):
     stdout, stderr = await process.communicate()
 
     if process.returncode != 0:
-        print(f'Error creating instance {name}: {stderr.decode().strip()}')
+        print(f'Error creating instance {worker_name}: {stderr.decode().strip()}')
     else:
-        print(f'Created instance: {name}')
+        print(f'Created instance: {worker_name}')
 
 
 def escape_name(name: str) -> str:
@@ -250,18 +270,13 @@ async def main():
 
     # Create worker instances concurrently
     tasks = [
-        asyncio.ensure_future(create_instance(worker["name"], worker["zone"]))
+        asyncio.ensure_future(create_instance(worker))
         for worker in worker_instances
     ]
     await asyncio.gather(*tasks)
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [
-            executor.submit(execute_worker_tasks, worker["name"],
-                            worker["zone"], worker["config_node_path"],
-                            worker["config_rpc_path"], worker["docker_tag"],
-                            worker["runid"]) for worker in worker_instances
-        ]
+        futures = [executor.submit(execute_worker_tasks, worker) for worker in worker_instances]
         # Wait for all tasks to complete
         for future in concurrent.futures.as_completed(futures):
             try:

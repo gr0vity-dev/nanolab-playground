@@ -5,13 +5,13 @@
         "nanocurrency/nano:V26.1"
     ],
     "global": {
-        "BLOCK_PATH": "./_resources/blocks/5n4pr_100k_bintree.json",
+        "BLOCK_PATH": "_resources/blocks/5n4pr_200legit.json",
         "LEDGER_PATH_1": "_resources/ledgers/11n10pr_500k_checked_part1.ldb",
         "LEDGER_PATH_2": "_resources/ledgers/11n10pr_500k_checked_part2.ldb",
         "LEDGER_PATH_3": "_resources/ledgers/11n10pr_500k_checked_part3.ldb",
         "LEDGER_PATH_4": "_resources/ledgers/11n10pr_500k_checked_part4.ldb",
-        "NL_CONFIG_PATH": "./_resources/configs/nanomock/11n10pr_default.toml",
-        "NODE_CONFIG_PATH": "./_resources/configs/config-node_default.toml",
+        "NL_CONFIG_PATH": "_resources/configs/nanomock/11n10pr_default.toml",
+        "NODE_CONFIG_PATH": "_resources/configs/config-node_default.toml",
         "TEST_TIMEOUT": 6000,
         "BPS_PER_THREAD": 2500,
         "END_ROUND": 10,
@@ -164,14 +164,8 @@
                             "blocks_path": "{BLOCK_PATH}",
                             "bps": 0.1,
                             "peers": [
-                                "nl_pr1"
-                            ],
-                            "start_round": 0,
-                            "end_round": 1,
-                            "subset": {
-                                "start_index": 0,
-                                "end_index": 500
-                            }
+                                "nl_pr1", "nl_pr2" , "nl_pr3" , "nl_pr4", "nl_pr5", "nl_pr6" , "nl_pr7" , "nl_pr8" , "nl_pr9", "nl_pr10"
+                            ]
                         }
                     },
                     "class": "NodeInteraction",

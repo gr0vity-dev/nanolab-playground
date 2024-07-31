@@ -1,4 +1,4 @@
-#!./gcloud_venv/bin/python
+#!./nanolab_venv/bin/python
 import json
 import subprocess
 import toml
@@ -18,6 +18,7 @@ result = subprocess.run([
 
 # Parse the JSON output
 instances = json.loads(result.stdout.decode())
+print(instances)
 insights_config = {"nodes": [], "source": "gcloud_gr0vity"}
 
 # Load the TOML file

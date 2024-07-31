@@ -1,0 +1,15 @@
+confirmation_timeout_seconds = 15
+threshold = 800050
+legit_blocks_path = "_resources/blocks/11n10pr_200legit.json"
+rpc_endpoints = [
+   "http://127.0.0.1:45101",
+    "http://127.0.0.1:45102",
+    "http://127.0.0.1:45103",
+    "http://127.0.0.1:45104",
+    "http://127.0.0.1:45105",
+    "http://127.0.0.1:45106",
+    "http://127.0.0.1:45107",
+    "http://127.0.0.1:45108",
+    "http://127.0.0.1:45109",
+    "http://127.0.0.1:45110"
+]

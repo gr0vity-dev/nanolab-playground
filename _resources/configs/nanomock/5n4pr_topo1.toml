@@ -14,6 +14,7 @@ nanolooker_mongo_port = 27017
 
 promexporter_enable = true
 prom_gateway = "https://nl-exporter.bnano.info"
+#prom_gateway = "nl_pushgateway:9091"
 prom_runid = "nanolab_default"
 
 [representatives]

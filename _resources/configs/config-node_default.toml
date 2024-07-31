@@ -1,15 +1,15 @@
 [node.websocket]
-address = "::ffff:0.0.0.0"
-enable = true
-port = 17078
+    address = "::ffff:0.0.0.0"
+    enable = true
+    port = 17078
 
 [rpc]
-enable = true
-enable_sign_hash = true
+    enable = true
+    enable_sign_hash = true
 
 [node]
-work_threads = 1
-enable_voting = true
-peering_port = 17075
-preconfigured_peers = []
-allow_local_peers = true
+    work_threads = 1
+    enable_voting = true
+    peering_port = 17075
+    preconfigured_peers = []
+    allow_local_peers = true

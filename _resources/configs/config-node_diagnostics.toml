@@ -1,0 +1,26 @@
+[node.websocket]
+    address = "::ffff:0.0.0.0"
+    # Enable or disable WebSocket server.
+    enable = true
+    port = 17078
+
+[rpc]
+    enable = true
+    enable_sign_hash = true
+
+[node]
+    work_threads = 1
+    enable_voting = true
+    peering_port = 17075
+    preconfigured_peers = []
+    allow_local_peers = true
+
+[node.diagnostics.txn_tracking]
+    enable = true
+    ignore_writes_below_block_processor_max_time = true
+    min_read_txn_time = 5000
+    min_write_txn_time = 750
+
+#[node.lmdb]
+#    sync = "nosync_unsafe"
+

@@ -2,7 +2,7 @@
 
 ```bash
 ./install_gcloud.sh #installs gcloud dependencies
-./init_gcloud_venv.sh #installs a virtial python env
+# ./init_gcloud_venv.sh #installs a virtial python env
 nano config_gcloud.json # modify config settings
 ```
 

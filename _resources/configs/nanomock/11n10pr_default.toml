@@ -14,6 +14,7 @@ nanolooker_mongo_port = 27017
 
 promexporter_enable = true
 prom_gateway = "https://nl-exporter.bnano.info"
+#prom_gateway = "nl_pushgateway:9091"
 prom_runid = "nanolab_default"
 
 [representatives]
@@ -22,6 +23,7 @@ host_port_peer = 44100
 host_port_rpc = 45100
 host_port_ws = 47100
 docker_tag = "nanocurrency/nano:V26.1"
+node_flags = ["--disable_max_peers_per_ip"]
 
 [[representatives.nodes]]
 name = "genesis"

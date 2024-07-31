@@ -5,10 +5,10 @@
         "nanocurrency/nano:V26.1"
     ],
     "global": {
-        "BLOCK_PATH_SM": "./_resources/blocks/5n4pr_100k_bintree.json",
-        "LEDGER_PATH": "./_resources/ledgers/11n10pr_800k.ldb",
-        "NL_CONFIG_PATH": "./_resources/configs/nanomock/11n10pr_default.toml",
-        "NODE_CONFIG_PATH": "./_resources/configs/config-node_default.toml",
+        "BLOCK_PATH_SM": "_resources/blocks/5n4pr_100k_bintree.json",
+        "LEDGER_PATH": "_resources/ledgers/11n10pr_800k.ldb",
+        "NL_CONFIG_PATH": "_resources/configs/nanomock/11n10pr_default.toml",
+        "NODE_CONFIG_PATH": "_resources/configs/config-node_default.toml",
         "SETUP_NODES": "nl_genesis nl_pr1 nl_pr3 nl_pr4 nl_pr5 nl_pr6 nl_pr7 nl_pr8 nl_pr9",
         "TEST_TIMEOUT": 1200,
         "EXPECTED_BLOCKS": 800000,

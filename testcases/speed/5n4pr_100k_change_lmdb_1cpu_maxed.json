@@ -5,18 +5,17 @@
         "nanocurrency/nano:V26.1"
     ],
     "global": {
-        "BLOCK_PATH": "./_resources/blocks/5n4pr_bucket_rounds.json",
-        "LEDGER_PATH": "./_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
-        "NL_CONFIG_PATH": "./_resources/configs/nanomock/5n4pr_default.toml",
-        "NODE_CONFIG_PATH": "./_resources/configs/config-node_default.toml",
-        "SETUP_NODES": "nl_genesis nl_pr1 nl_pr2 nl_pr3 nl_pr4 nl_node5",
+        "BLOCK_PATH": "_resources/blocks/5n4pr_bucket_rounds.json",
+        "LEDGER_PATH": "_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
+        "NL_CONFIG_PATH": "_resources/configs/nanomock/5n4pr_default.toml",
+        "NODE_CONFIG_PATH": "_resources/configs/config-node_default.toml",
+        "SETUP_NODES": "nl_genesis nl_pr1 nl_pr2 nl_pr3 nl_pr4",
         "PEERS": [
             "nl_pr1",
             "nl_pr2",
             "nl_pr3",
             "nl_pr4",
-            "nl_genesis",
-            "nl_node5"
+            "nl_genesis"
         ],
         "TEST_TIMEOUT": 180,
         "BPS_PER_THREAD": 2000,

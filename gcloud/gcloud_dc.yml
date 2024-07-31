@@ -4,7 +4,8 @@ services:
   nanonode:
     image: ${DOCKER_TAG}
     container_name: nanonode
-    command: nano_node daemon --network=test --data_path=/root/NanoTest -l
+    command: nano_node daemon --network=test --disable_max_peers_per_ip --disable_lazy_bootstrap --disable_legacy_bootstrap --disable_wallet_bootstrap --disable_ongoing_bootstrap --disable_ascending_bootstrap --disable_max_peers_per_subnetwork --data_path=/root/NanoTest -l
+    #command: nano_node daemon --network=test --data_path=/root/NanoTest -l
     restart: unless-stopped
     privileged: 'true'
     volumes:
@@ -17,13 +18,38 @@ services:
       NANO_TEST_EPOCH_2_RECV: 0x000000000000000f
       NANO_TEST_MAGIC_NUMBER: RX
       NANO_TEST_CANARY_PUB: CCAB949948224D6B33ACE0E078F7B2D3F4D79DF945E46915C5300DAEF237934E
-    network_mode: host
+    network_mode: host   
   nanonode_exporter:
-    image: gr0v1ty/nano-prom-exporter:fc1d802b7c0737cdadebd34c2d90de232c7d9069
+    #image: gr0v1ty/nano-prom-exporter:45e3efcd090f93e416504403fbf1474a753873db
+    image: gr0v1ty/nano-prom-exporter:45e3efcd090f93e-no-conf-histo
     container_name: nanonode_exporter
     restart: unless-stopped
     environment:
     - NANO_PROM_DEBUG=0
-    command: --rpchost 127.0.0.1 --rpc_port 17076 --push_gateway https://nl-exporter.bnano.info
-      --hostname ${INSTANCE_NAME} --runid ${RUN_ID:-gcloud_testsuite} --interval 2
+    command: --host 127.0.0.1 --port 17076 --push_gateway https://nl-exporter.bnano.info --hostname ${INSTANCE_NAME} --runid ${RUN_ID:-gcloud_testsuite} --interval 2
     network_mode: host
+
+#   netdata:
+#       image: netdata/netdata:latest
+#       container_name: netdata      
+#       ports:
+#         - 19999:19999
+#       restart: unless-stopped
+#       cap_add:
+#         - SYS_PTRACE
+#       security_opt:
+#         - apparmor:unconfined
+#       volumes:
+#         - netdataconfig:/etc/netdata
+#         - netdatalib:/var/lib/netdata
+#         - netdatacache:/var/cache/netdata
+#         - /etc/passwd:/host/etc/passwd:ro
+#         - /etc/group:/host/etc/group:ro
+#         - /proc:/host/proc:ro
+#         - /sys:/host/sys:ro
+#         - /etc/os-release:/host/etc/os-release:ro
+    
+# volumes:
+#   netdataconfig:
+#   netdatalib:
+#   netdatacache:

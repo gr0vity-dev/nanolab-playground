@@ -14,6 +14,7 @@ nanolooker_mongo_port = 27017
 
 promexporter_enable = true
 prom_gateway = "https://nl-exporter.bnano.info"
+#prom_gateway = "nl_pushgateway:9091"
 prom_runid = "nanolab_default"
 
 [representatives]
@@ -27,5 +28,5 @@ docker_tag = "nanocurrency/nano:V26.1"
 name = "pr1"
 seed = "1110000000000000000000000000000000000000000000000000000000000001"
 vote_weight_percent = 25
-config_node_path = "./_resources/configs/config-node_novote.toml"
+config_node_path = "_resources/configs/config-node_novote.toml"
 enable_voting = false

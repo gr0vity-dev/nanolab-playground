@@ -1,0 +1,9 @@
+confirmation_timeout_seconds = 5
+threshold = 219000
+legit_blocks_path = "_resources/blocks/5n4pr_bucket_rounds_r1_1000.json"
+rpc_endpoints = [
+  "http://127.0.0.1:45101",
+  "http://127.0.0.1:45102",
+  "http://127.0.0.1:45103",
+  "http://127.0.0.1:45104",
+]

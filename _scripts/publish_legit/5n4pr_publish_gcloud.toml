@@ -1,5 +1,7 @@
-confirmation_timeout_seconds = 20
+confirmation_timeout_seconds = 6
 threshold = 203000
-legit_blocks_path = "testcases/downloads/_blocks/5n4pr_200legit.json"
+legit_blocks_path = "_resources/blocks/5n4pr_200legit.json"
 use_dynamic_endpoints = true
+endpoint_skip = 2
+endpoint_take = 4
 dynamic_endpoint_config = "nl_config.toml"

@@ -5,11 +5,11 @@
         "nanocurrency/nano:V26.1"
     ],
     "global": {
-        "BLOCK_PATH": "./_resources/blocks/11n10pr_bucket_rounds_2m.json",
-        "BLOCK_PATH_SM": "./_resources/blocks/5n4pr_100k_bintree.json",
-        "LEDGER_PATH": "./_resources/ledgers/11n10pr_800k.ldb",
-        "NL_CONFIG_PATH": "./_resources/configs/nanomock/11n10pr_default.toml",
-        "NODE_CONFIG_PATH": "./_resources/configs/config-node_default.toml",
+        "BLOCK_PATH": "_resources/blocks/11n10pr_bucket_rounds_2m.json",
+        "BLOCK_PATH_SM": "_resources/blocks/5n4pr_100k_bintree.json",
+        "LEDGER_PATH": "_resources/ledgers/11n10pr_800k.ldb",
+        "NL_CONFIG_PATH": "_resources/configs/nanomock/11n10pr_default.toml",
+        "NODE_CONFIG_PATH": "_resources/configs/config-node_default.toml",
         "TEST_TIMEOUT": 6000,
         "BPS_PER_THREAD": 2000,
         "END_ROUND": 10,
