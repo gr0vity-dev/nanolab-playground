@@ -18,8 +18,8 @@ setup_python() {
 install_dependencies() {
     echo "Installing dependencies..."
     ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/python-ed25519-blake2b
-    ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/nanomock.git@95f19d009dd3612308a03f2d4006df08bf3681cd
-    ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/nanolab.git@4d072a2ec9efd90d085ca438d6201abb69ed8505 
+    ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/nanomock.git@9cc0f351ae4ccaf50d366d0fdbb183b1ee2ee6ef
+    ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/nanolab.git@b8d22c742480d2ccc60a2ae752328984c7ca3186
     ./nanolab_venv/bin/pip3 install -r requirements.txt --quiet
 }
 
@@ -80,7 +80,7 @@ create_uid() {
 download_large_files() {
     echo "Downloading and organizing files..."
     base_url="https://frmpm7m0wpcq.objectstorage.eu-frankfurt-1.oci.customer-oci.com/n/frmpm7m0wpcq/b/nanoct/o/"
-    
+
     mkdir -p _resources/blocks
     mkdir -p _resources/ledgers
 
@@ -94,12 +94,13 @@ download_large_files() {
                            "11n10pr_bucket_rounds_2m.json")
 
     # List of ldb and tar.gz files
-    declare -a ledger_files=("5n4pr_bucket0-1-88-90-100_10kaccs.ldb"
-                             "5n4pr_init.ldb"
-                             "5n4pr_buckets_rocksdb.tar.gz"
+    declare -a ledger_files=("5n4pr_init.ldb"
                              "5n4pr_init_rocksdb.tar.gz"
+                             "5n4pr_buckets_rocksdb.tar.gz"
+                             "5n4pr_bucket0-1-88-90-100_10kaccs.ldb"
                              "5n4pr_bintree_rocksdb.tar.gz"
                              "11n10pr_800k.ldb"
+                             "11n10pr_800k_rocksdb.tar.gz"
                              "11n10pr_500k_checked_part1.ldb"
                              "11n10pr_500k_checked_part2.ldb"
                              "11n10pr_500k_checked_part3.ldb"
