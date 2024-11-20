@@ -5,7 +5,7 @@
         "nanocurrency/nano:V26.1"
     ],
     "global": {
-        "LEDGER_PATH": "_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs.ldb",
+        "LEDGER_PATH": "_resources/ledgers/5n4pr_bucket0-1-88-90-100_10kaccs_v24.ldb",
         "NL_CONFIG_PATH": "_resources/configs/nanomock/5n4pr_default.toml",
         "CPU_PER_NODE": 0.3
     },

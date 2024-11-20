@@ -80,6 +80,12 @@ create_uid() {
         eval "$sed_cmd 's/\(prom_runid.*\"nanolab_\)[^\"]*/\1${random_string}/g' \"$file\""
     done
 
+    echo "################################################"
+    echo "### Visit https://nl-nodestats.bnano.info to see test results"
+    echo "### Your personal JOB_ID is nanolab_${random_string}"
+    echo "################################################"
+    sleep 2
+
     echo "Replacement complete."
 }
 
@@ -101,10 +107,10 @@ download_large_files() {
                    "5n4pr_bucket_rounds.json"
                    "5n4pr_bucket_rounds_short.json"
                    "5n4pr_200legit.json")
-        ledger_files=("5n4pr_init.ldb"
+        ledger_files=("5n4pr_init_v24.ldb"
                      "5n4pr_init_rocksdb.tar.gz"
                      "5n4pr_buckets_rocksdb.tar.gz"
-                     "5n4pr_bucket0-1-88-90-100_10kaccs.ldb"
+                     "5n4pr_bucket0-1-88-90-100_10kaccs_v24.ldb"
                      "5n4pr_bintree_rocksdb.tar.gz")
     elif [ "$network" = "11n10pr" ]; then
         json_files=("11n10pr_200legit.json"
