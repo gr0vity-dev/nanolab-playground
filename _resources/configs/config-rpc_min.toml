@@ -10,4 +10,4 @@ enable_sign_hash = true
 port = 17076
 
 [logging]
-log_rpc = false
+    log_rpc = false

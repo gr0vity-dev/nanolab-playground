@@ -14,6 +14,8 @@ enable_sign_hash = true
     peering_port = 17075
     preconfigured_peers = []
     allow_local_peers = true
+    max_peers_per_ip = 99
+    max_peers_per_subnetwork = 99
 
 [node.diagnostics.txn_tracking]
     enable = true

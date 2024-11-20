@@ -14,6 +14,8 @@
     preconfigured_peers = []
     allow_local_peers = true
     max_unchecked_blocks = 1
+    max_peers_per_ip = 99
+    max_peers_per_subnetwork = 99
 
 [node.rocksdb]
     enable = true

@@ -15,6 +15,8 @@
     allow_local_peers = true
     #bandwidth_limit = 100000
     #active_elections_size = 5000
+    max_peers_per_ip = 99
+    max_peers_per_subnetwork = 99
 
 [node.active_elections]
     size = 5000
