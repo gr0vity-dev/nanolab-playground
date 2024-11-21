@@ -20,7 +20,7 @@ setup_python() {
 install_dependencies() {
     echo "Installing dependencies..."
     ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/python-ed25519-blake2b
-    ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/nanomock.git@1f0573b13453e4f3e10cae49d9bc6b0d13799a7b
+    ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/nanomock.git@8210deee8b923e2fcdfde1160bdf490973a466fe
     ./nanolab_venv/bin/pip3 install git+https://github.com/gr0vity-dev/nanolab.git@f664563b1106c80384ade431f93d1670443bc407
 }
 
